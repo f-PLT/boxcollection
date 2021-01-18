@@ -25,8 +25,8 @@ end
 #
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/bionic64"
-  config.vm.define "baseBox"
-  config.vm.hostname = "baseBox"
+  config.vm.define "smallBox"
+  config.vm.hostname = "smallBox"
   config.disksize.size = '40GB'
   
   # Network and port configuration
@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
   # VIRTUALBOX CONF
   #
   config.vm.provider "virtualbox" do |v|
-    v.name = "baseBox"
+    v.name = "smallBox"
     v.memory = 4096
     v.cpus = 2
     v.check_guest_additions = false
