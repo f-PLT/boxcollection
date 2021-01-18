@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
   # Configure host-only adapter in Host Network manager, VirtualBox before
   # You can specify an IP or remove it and let DCHP handle it
   #config.vm.network "private_network", ip: "192.*.*.*"
-  
+
   # Bridged network
   # You can specify an IP or let DHCP handle it
   #config.vm.network "public_network"
@@ -64,9 +64,8 @@ Vagrant.configure("2") do |config|
     sudo apt-get -y upgrade
     echo
     sudo apt-get install -y ubuntu-desktop
-    echo "Ubuntu-desktop has been installed and your VM has been shutdown."
+    echo "Ubuntu-desktop has been installed and you should restart your VM."
     echo "Open your VM through Virtualbox the first time you open it (not with vagrant up)."
-    sudo shutdown now
   SHELL
   
   config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/America/Montreal /etc/localtime", run: "always"
