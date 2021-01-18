@@ -1,0 +1,72 @@
+# This Vagrantfile is meant as a quick to deploy vm, with no configurations and no GUI
+# However, it still used the "hashicorp/bionic box" in case you want to install
+# ubuntu-desktop in the future.
+#
+# If not, feel free to use the ubuntu bento boxes, like "bento/ubuntu-20.04"
+
+# Tested with VirtualBox 6.0.x and Vagrant 2.2.x
+
+#
+# PLUGINS
+#
+unless Vagrant.has_plugin?("vagrant-disksize")
+  puts 'Installing vagrant-disksize Plugin...'
+  system('vagrant plugin install vagrant-disksize')
+end
+
+# Checks and removes vbguest plugin so vm init goes faster
+if Vagrant.has_plugin?("vagrant-vbguest")
+  puts 'Removing vagrant-vbguest Plugin...'
+  system('vagrant plugin uninstall vagrant-vbguest')
+end
+
+#
+# VAGRANT CONF
+#
+Vagrant.configure("2") do |config|
+  config.vm.box = "hashicorp/bionic64"
+  config.vm.define "baseBox"
+  config.vm.hostname = "baseBox"
+  config.disksize.size = '40GB'
+  
+  # Network and port configuration
+  # Set ports as needed
+  #config.vm.network :forwarded_port, guest: 8080, host: 8080
+
+  # Set network
+  # Private network
+  # Configure host-only adapter in Host Network manager, VirtualBox before
+  # You can specify an IP or remove it and let DCHP handle it
+  #config.vm.network "private_network", ip: "192.*.*.*"
+  
+  # Bridged network
+  # You can specify an IP or let DHCP handle it
+  #config.vm.network "public_network"
+
+  #
+  # VIRTUALBOX CONF
+  #
+  config.vm.provider "virtualbox" do |v|
+    v.name = "baseBox"
+    v.memory = 4096
+    v.cpus = 2
+    v.check_guest_additions = false
+    v.gui = false
+    v.customize ["modifyvm", :id, "--vram", "32"]
+  end
+
+  #
+  # COMMAND LINE INSTRUCTIONS
+  #
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    wget -O install.sh https://gitlab.com/f_PLT/dev-setup/-/raw/master/install.sh?inline=false
+    chmod +x install.sh
+    ./install.sh setup bashconf basictools python
+    sudo rm -rf dev-setup install.sh
+    sudo apt-get update
+    sudo apt-get -y upgrade
+    sudo reboot
+  SHELL
+
+  config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/America/Montreal /etc/localtime", run: "always"
+end
