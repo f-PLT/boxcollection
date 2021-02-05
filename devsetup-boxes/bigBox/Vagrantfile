@@ -1,0 +1,93 @@
+# This Vagrantfile is meant as a quick to deploy dev environment, with no GUI
+#
+# If not, feel free to use the ubuntu bento boxes, like "bento/ubuntu-20.04"
+
+# Tested with VirtualBox 6.0.x and Vagrant 2.2.x
+
+#
+# BOX VARIABLES
+#
+
+# These are some (but not all) of the parameters you can change.
+# They are grouped here for convinience.
+VM_NAME = "bigBox"
+
+# Alternatively you can use "bento/ubuntu-20.04" instead as a base box.
+# Hashicorp only recommends hashicorp and bento boxes, but there can be
+# some issues with bento boxes and virtualbox, particularly with the VB Guest additions
+# and dynamic screen resolution
+VM_BOX = "bento/ubuntu-20.04"
+
+# CPU, ram and disk size can be changed now or later.
+# Disk size can't be reduced afterwards.
+CPU_COUNT = 2
+RAM_MB = 8196
+DISK_SIZE = "80GB"
+
+PRIVATE_NET_IP = "192.168.56.77"
+#
+# PLUGINS
+#
+unless Vagrant.has_plugin?("vagrant-disksize")
+  puts 'Installing vagrant-disksize Plugin...'
+  system('vagrant plugin install vagrant-disksize')
+end
+
+#
+# VAGRANT CONFIGURATION
+#
+Vagrant.configure("2") do |config|
+  config.vm.box = VM_BOX
+  config.vm.define VM_NAME
+  config.vm.hostname = VM_NAME
+  config.disksize.size = DISK_SIZE
+  #
+  # Network and port configuration
+  #
+  # Set ports as needed
+  #config.vm.network :forwarded_port, guest: 8080, host: 8080
+
+  # Private network
+  # Configure host-only adapter in Host Network manager, VirtualBox before
+  # You can specify an IP or remove it and let DCHP handle it
+  config.vm.network "private_network", ip: PRIVATE_NET_IP
+
+  # Bridged network
+  # You can specify an IP or let DHCP handle it
+  #config.vm.network "public_network"
+
+  # Share a folder between host and VM.
+  # Can also be done later throught the GUI
+  #config.vm.synced_folder "C:/projects"
+
+  #
+  # VIRTUALBOX CONFIGURATION
+  #
+  # For more options: https://www.virtualbox.org/manual/ch08.html#vboxmanage-cmd-overview
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = VM_NAME
+    vb.cpus = CPU_COUNT
+    vb.memory = RAM_MB
+	  vb.check_guest_additions = false
+    vb.customize ["modifyvm", :id, "--vram", "128"]
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+	  vb.customize [ "modifyvm", :id, "--graphicscontroller", "vmsvga" ]
+	  vb.customize [ "modifyvm", :id, "--vrde", "off" ]
+  end
+
+  #
+  # COMMAND LINE INSTRUCTIONS
+  #
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    wget -O install.sh https://gitlab.com/f_PLT/dev-setup/-/raw/master/install.sh?inline=false
+    chmod +x install.sh
+    ./install.sh setup bashconf basictools python docker
+    sudo rm -rf dev-setup install.sh
+    sudo apt-get update
+    sudo apt-get upgrade -y
+  SHELL
+  config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/America/Montreal /etc/localtime", run: "always"
+  
+end
