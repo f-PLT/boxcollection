@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     wget -O install.sh https://gitlab.com/f_PLT/dev-setup/-/raw/master/install.sh?inline=false
     chmod +x install.sh
-    ./install.sh setup bashconf basictools python docker
+    ./install.sh setup bashconf vimconf basictools python docker web
     sudo rm -rf dev-setup install.sh
     sudo apt-get update
     sudo apt-get upgrade -y
