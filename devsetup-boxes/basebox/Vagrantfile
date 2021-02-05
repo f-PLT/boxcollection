@@ -34,12 +34,6 @@ unless Vagrant.has_plugin?("vagrant-disksize")
   system('vagrant plugin install vagrant-disksize')
 end
 
-# Checks and removes vbguest plugin so vm init goes faster
-if Vagrant.has_plugin?("vagrant-vbguest")
-  puts 'Removing vagrant-vbguest Plugin...'
-  system('vagrant plugin uninstall vagrant-vbguest')
-end
-
 #
 # VAGRANT CONFIGURATION
 #
