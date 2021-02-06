@@ -12,16 +12,16 @@
 # They are grouped here for convinience.
 VM_NAME = "visualBox"
 
-# Alternatively you can use "bento/ubuntu-20.04" instead as a base box.
-# Hashicorp only recommends hashicorp and bento boxes, but there can be
-# some issues with bento boxes and virtualbox, particularly with the VB Guest additions
-# and dynamic screen resolution
+# Alternatively you can use "hashicorp/bionic64" instead as a base box.
+# Hashicorp only recommends hashicorp and bento boxes.
 VM_BOX = "bento/ubuntu-20.04"
 
 # CPU, ram and disk size can be changed now or later.
 # Disk size can't be reduced afterwards.
+# Min disk size with bento/hashicorp boxes is 64gb,
+# unless you really want to dig in the configurations.
 CPU_COUNT = 4
-RAM_MB = 8196
+RAM_MB = 16384
 DISK_SIZE = "120GB"
 
 PRIVATE_NET_IP = "192.168.56.63"
@@ -30,14 +30,11 @@ PRIVATE_NET_IP = "192.168.56.63"
 # PLUGINS
 #
 unless Vagrant.has_plugin?("vagrant-disksize")
-  puts 'Installing vagrant-disksize Plugin...'
-  system('vagrant plugin install vagrant-disksize')
+  raise 'missing plugin: vagrant plugin install vagrant-disksize'
 end
 unless Vagrant.has_plugin?("vagrant-vbguest")
-  puts 'Installing vagrant-vbguest Plugin...'
-  system('vagrant plugin install vagrant-vbguest')
+  raise 'missing plugin: vagrant plugin install vagrant-vbguest'
 end
-
 #
 # VAGRANT CONFIGURATION
 #

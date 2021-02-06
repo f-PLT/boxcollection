@@ -16,12 +16,14 @@
 # They are grouped here for convinience.
 VM_NAME = "vagrant-ubuntu"
 
-# Alternatively you can use "bento/ubuntu-20.04" instead as a base box.
+# Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes.
 VM_BOX = "bento/ubuntu-20.04"
 
 # CPU, ram and disk size can be changed now or later.
 # Disk size can't be reduced afterwards.
+# Min disk size with bento/hashicorp boxes is 64gb,
+# unless you really want to dig in the configurations.
 CPU_COUNT = 2
 RAM_MB = 8196
 DISK_SIZE = "80GB"
@@ -30,12 +32,10 @@ PRIVATE_NET_IP = "192.168.56.101"
 
 # Check for necessary plugins
 unless Vagrant.has_plugin?("vagrant-disksize")
-  puts 'Installing vagrant-disksize Plugin...'
-  system('vagrant plugin install vagrant-disksize')
+  raise 'missing plugin: vagrant plugin install vagrant-disksize'
 end
 unless Vagrant.has_plugin?("vagrant-vbguest")
-  puts 'Installing vagrant-vbguest Plugin...'
-  system('vagrant plugin install vagrant-vbguest')
+  raise 'missing plugin: vagrant plugin install vagrant-vbguest'
 end
 
 #
@@ -108,16 +108,16 @@ Vagrant.configure("2") do |config|
       rm $HOME/miniconda.sh
     fi
 
-    #install eclipse/maven
+    # install java/maven
     #sudo apt-get install -y openjdk-11-jdk                 # sudo apt-get install default-jdk
     #sudo snap install intellij-idea-community --classic		# sudo snap install --classic eclipse 
     #sudo apt-get install -y maven git
     
-    # Install pycharm
-    sudo snap install pycharm-community --classic
+    # install pycharm
+    #sudo snap install pycharm-community --classic
   
-    # Install Vscode
-    sudo snap install code --classic
+    # install Vscode
+    #sudo snap install code --classic
   
     # install ubuntu gui
     sudo apt-get install -y ubuntu-desktop
