@@ -100,13 +100,13 @@ Vagrant.configure("2") do |config|
     sudo curl -L "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     
-    if ! [ -d "$HOME/miniconda" ]; then
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-      bash ~/miniconda.sh -b -p $HOME/miniconda
-      export PATH="$HOME/miniconda/bin:$PATH"
-      echo '\nexport PATH="$HOME/miniconda/bin:$PATH"' >> ~/.bashrc
-      rm $HOME/miniconda.sh
-    fi
+  
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+    bash ~/miniconda.sh -b -p $HOME/.conda
+    export PATH="$HOME/.conda/bin:$PATH"
+    conda init
+    rm $HOME/miniconda.sh
+
 
     # install java/maven
     #sudo apt-get install -y openjdk-11-jdk                 # sudo apt-get install default-jdk
