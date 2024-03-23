@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
   # COMMAND LINE INSTRUCTIONS
   #
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
-    wget -O install.sh https://gitlab.com/f_PLT/dev-setup/-/raw/master/install.sh?inline=false
+    wget -O install.sh https://raw.githubusercontent.com/f-PLT/dev-setup-scripts/master/install.sh?inline=false
     chmod +x install.sh
     ./install.sh setup bashconf vimconf basictools python web
     sudo rm -rf dev-setup install.sh
