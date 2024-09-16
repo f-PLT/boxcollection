@@ -1,6 +1,6 @@
 # This Vagrantfile is meant as a quick to deploy dev environment, with no GUI
 #
-# If not, feel free to use the ubuntu bento boxes, like "bento/ubuntu-20.04"
+# If not, feel free to use the ubuntu bento boxes, like "bento/ubuntu-22.04"
 
 # Tested with VirtualBox 6.0.x and Vagrant 2.2.x
 
@@ -14,7 +14,7 @@ VM_NAME = "bigBox"
 
 # Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes.
-VM_BOX = "bento/ubuntu-20.04"
+VM_BOX = "bento/ubuntu-22.04"
 
 # CPU, ram and disk size can be changed now or later.
 # Disk size can't be reduced afterwards.

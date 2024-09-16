@@ -18,7 +18,7 @@ VM_NAME = "vagrant-docker"
 
 # Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes.
-VM_BOX = "bento/ubuntu-20.04"
+VM_BOX = "bento/ubuntu-22.04"
 
 # CPU and ram size can be changed now or later.
 CPU_COUNT = 2

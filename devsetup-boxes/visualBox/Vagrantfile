@@ -14,7 +14,7 @@ VM_NAME = "visualBox"
 
 # Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes.
-VM_BOX = "bento/ubuntu-20.04"
+VM_BOX = "bento/ubuntu-22.04"
 
 # CPU, ram and disk size can be changed now or later.
 # Disk size can't be reduced afterwards.
