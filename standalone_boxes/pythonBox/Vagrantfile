@@ -18,14 +18,14 @@ VM_NAME = "vagrant-python"
 
 # Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes
-VM_BOX = "bento/ubuntu-20.04"
+VM_BOX = "bento/ubuntu-22.04"
 
 # CPU and ram can be changed now or later.
 
 CPU_COUNT = 2
 RAM_MB = 4096
 
-PRIVATE_NET_IP = "192.168.56.102"
+#PRIVATE_NET_IP = "192.168.56.102"
 
 #
 # VAGRANT CONFIGURATION
@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   # Private network
   # Configure host-only adapter in Host Network manager, VirtualBox before
   # You can specify an IP or remove it and let DCHP handle it
-  config.vm.network "private_network", ip: PRIVATE_NET_IP
+#  config.vm.network "private_network", ip: PRIVATE_NET_IP
 
   # Bridged network
   # You can specify an IP or let DHCP handle it
@@ -76,14 +76,14 @@ Vagrant.configure("2") do |config|
   #
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     sudo apt-get update
-    sudo apt-get install -y vim git curl tree python3-pip build-essential
+    sudo apt-get install -y vim git curl tree python3-venv python3-pip build-essential
 	  pip3 install virtualenv
     
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-    bash ~/miniconda.sh -b -p $HOME/.conda
-    export PATH="$HOME/.conda/bin:$PATH"
-    conda init
-    rm $HOME/miniconda.sh
+#    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+#    bash ~/miniconda.sh -b -p $HOME/.conda
+#    export PATH="$HOME/.conda/bin:$PATH"
+#    conda init
+#    rm $HOME/miniconda.sh
 
   SHELL
   config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/America/Montreal /etc/localtime", run: "always"
