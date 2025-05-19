@@ -1,9 +1,3 @@
-# This Vagrantfile is meant as a quick to deploy vm, with no configurations and no GUI
-#
-# If not, feel free to use the ubuntu bento boxes, like "bento/ubuntu-22.04"
-
-# Tested with VirtualBox 6.0.x and Vagrant 2.2.x
-
 #
 # BOX VARIABLES
 #

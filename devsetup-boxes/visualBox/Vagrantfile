@@ -1,9 +1,3 @@
-# This Vagrantfile is meant as full GUI dev environment
-# It still uses the "hashicorp/bionic box" because of compatibility
-# issues with ubuntu-desktop and VirtualBox guest additions.
-
-# Tested with VirtualBox 6.0.x and Vagrant 2.2.x
-
 #
 # BOX VARIABLES
 #
