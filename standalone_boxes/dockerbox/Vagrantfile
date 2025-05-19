@@ -18,7 +18,7 @@ VM_NAME = "vagrant-docker"
 
 # Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes.
-VM_BOX = "bento/ubuntu-20.04"
+VM_BOX = "bento/ubuntu-24.04"
 
 # CPU and ram size can be changed now or later.
 CPU_COUNT = 2
@@ -61,12 +61,14 @@ Vagrant.configure("2") do |config|
     vb.cpus = CPU_COUNT
     vb.memory = RAM_MB
 	  vb.check_guest_additions = false
-    vb.customize ["modifyvm", :id, "--vram", "32"]
+	  vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga" ]
+    vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
-    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
-	  vb.customize [ "modifyvm", :id, "--graphicscontroller", "vmsvga" ]
-	  vb.customize [ "modifyvm", :id, "--vrde", "off" ]
+    vb.customize ["modifyvm", :id, "--uartmode1", "disconnected" ]
+    vb.customize ["modifyvm", :id, "--paravirtprovider", "kvm"]
+    vb.customize ["modifyvm", :id, "--nestedpaging", "on"]
+	  vb.customize ["modifyvm", :id, "--vrde", "off" ]
   end
 
   #
@@ -75,15 +77,23 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     sudo apt-get update
     sudo apt-get install -y vim git curl tree build-essential
-    
+
     # Install docker
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
-    rm get-docker.sh
-	  sudo usermod -aG docker $USER
-    # Install docker-compose
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
+    sudo apt-get install -y \
+      ca-certificates \
+      gnupg \
+      lsb-release
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
 
   SHELL
   config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/America/Montreal /etc/localtime", run: "always"
