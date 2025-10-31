@@ -4,17 +4,17 @@
 
 # These are some (but not all) of the parameters you can change.
 # They are grouped here for convinience.
-VM_NAME = "baseBox"
+VM_NAME = "smallBox"
 
 # Alternatively you can use "hashicorp/bionic64" instead as a base box.
 # Hashicorp only recommends hashicorp and bento boxes.
 VM_BOX = "bento/ubuntu-24.04"
 
 # CPU and ram can be changed now or later.
-CPU_COUNT = 1
-RAM_MB = 4096
+CPU_COUNT = 2
+RAM_MB = 8192
 
-PRIVATE_NET_IP = "192.168.56.89"
+PRIVATE_NET_IP = "192.168.56.111"
 
 #
 # VAGRANT CONFIGURATION
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = VM_BOX
   config.vm.define VM_NAME
   config.vm.hostname = VM_NAME
-  
+
   #
   # Network and port configuration
   #
@@ -51,9 +51,9 @@ Vagrant.configure("2") do |config|
     vb.name = VM_NAME
     vb.cpus = CPU_COUNT
     vb.memory = RAM_MB
-    vb.check_guest_additions = false
+	  vb.check_guest_additions = false
 	  vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga" ]
-    vb.customize ["modifyvm", :id, "--vram", "32"]
+    vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
     vb.customize ["modifyvm", :id, "--uartmode1", "disconnected" ]
@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     # Dev Packages
     git clone https://github.com/f-PLT/dev-setup-scripts.git ~/.dev-setup
-    (cd ~/.dev-setup && ./install.sh headless)
+    (cd ~/.dev-setup && ./install.sh docker-dev)
     sudo rm -rf ~/.dev-setup
     # System config and updates
     export DEBIAN_FRONTEND=noninteractive
@@ -76,6 +76,6 @@ Vagrant.configure("2") do |config|
     sudo -E apt-get upgrade -yq
     sudo -E apt-get autoremove -y
   SHELL
-
   config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/America/Montreal /etc/localtime", run: "always"
+
 end

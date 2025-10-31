@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     # Dev Packages
     git clone https://github.com/f-PLT/dev-setup-scripts.git ~/.dev-setup
-    (cd ~/.dev-setup && ./install.sh headless)
+    (cd ~/.dev-setup && ./install.sh python-dev)
     sudo rm -rf ~/.dev-setup
     # System config and updates
     export DEBIAN_FRONTEND=noninteractive

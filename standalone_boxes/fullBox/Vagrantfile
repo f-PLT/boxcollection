@@ -134,22 +134,19 @@ Vagrant.configure("2") do |config|
     sudo usermod -aG docker $USER
     
   
-    echo 'Fetching and installing miniconda'
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-    bash ~/miniconda.sh -b -p $HOME/.conda
-    export PATH=$HOME/.conda/bin:$PATH
-    conda init
-    rm ~/miniconda.sh
+    echo 'Fetching and installing miniforge'
 
-    echo 'Installing Micromamba'
-    wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-    mv bin/micromamba ~/.local/bin/micromamba
-    rm -rf bin/
-    ~/.local/bin/micromamba shell init -s bash ~/.micromamba
+    wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+    bash Miniforge3-$(uname)-$(uname -m).sh -b -p ~/.miniforge3
+    ln -s ~/.miniforge3/condabin/conda ~/.local/bin/conda
+    ln -s ~/.miniforge3/condabin/mamba ~/.local/bin/mamba
+    /usr/bin/rm Miniforge3-$(uname)-$(uname -m).sh
+    ~/.local/bin/conda init
+    ~/.local/bin/mamba shell init --shell bash --root-prefix=~/.mamba
+
 
     echo "" >> ~/.bashrc
     echo "# Conda aliases" >> ~/.bashrc
-    echo "alias mamba='micromamba'" >> ~/.bashrc
     echo "alias createEnv='conda create python=3.13 -n'" >> ~/.bashrc
     echo "alias createMambaEnv='mamba create python=3.13 -n'" >> ~/.bashrc
     echo "" >> ~/.bashrc
@@ -159,7 +156,6 @@ Vagrant.configure("2") do |config|
     cat << EOF > ~/.condarc
 channels:
   - conda-forge
-  - defaults
 channel_priority: strict
 EOF
 
